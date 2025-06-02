@@ -31,7 +31,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     //reset previous notes #Notes things : Logging file
     resetLogFile();
-    writeToNotes("*****  Application Started  *****");
+    writeToNotes(+"    ******    "+QCoreApplication::applicationName() +
+                 "     Application Started");
     //#################################################
 
     //Response Timer *********************************************##############
@@ -44,13 +45,12 @@ MainWindow::MainWindow(QWidget *parent)
     connect(serialObj, &serialPortHandler::dataReceived, this, &MainWindow::onDataReceived);
     //************************************************************##############
 
-
-
 }
 
 MainWindow::~MainWindow()
 {
-    writeToNotes("****** Application Closed ******");
+    writeToNotes(+"    ******    "+QCoreApplication::applicationName() +
+                 "     Application Closed");
     delete ui;
     delete serialObj;
     delete responseTimer;
@@ -160,6 +160,47 @@ QString MainWindow::hexBytes(QByteArray &cmd)
     }
     return formattedHexOutput;
     //**************************Visuals*******************
+}
+
+void MainWindow::printMemoryUsage()
+{
+    PROCESS_MEMORY_COUNTERS_EX memInfo;
+    if (GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS*)&memInfo, sizeof(memInfo))) {
+        SIZE_T workingSet = memInfo.WorkingSetSize;
+        SIZE_T privateUsage = memInfo.PrivateUsage;
+
+        qDebug() << "Working Set (RAM):"
+                 << workingSet / 1024 << "KB ("
+                 << QString::number(workingSet / (1024.0 * 1024.0), 'f', 2) << "MB)";
+
+        qDebug() << "Private Bytes:"
+                 << privateUsage / 1024 << "KB ("
+                 << QString::number(privateUsage / (1024.0 * 1024.0), 'f', 2) << "MB)";
+    } else {
+        qDebug() << "Failed to get memory info!";
+    }
+}
+
+void MainWindow::elapseStart()
+{
+    elapsedTimer.start();
+}
+
+void MainWindow::elapseEnd(bool goFurther, const QString &label)
+{
+    qint64 ns = elapsedTimer.nsecsElapsed();
+    double ms = ns / 1000000.0;
+
+    if (label.isEmpty()) {
+        qDebug() << "Time taken from elapseStart() to elapseEnd():"
+                 << ns << "ns (" << ms << "ms)";
+    } else {
+        qDebug() << "Elapsed [" << label << "]:"
+                 << ns << "ns (" << ms << "ms)";
+    }
+
+    if (!goFurther)
+        elapsedTimer.restart();
 }
 
 

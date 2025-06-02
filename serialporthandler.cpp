@@ -86,6 +86,22 @@ quint8 serialPortHandler::chkSum(const QByteArray &data)
     return checksum;
 }
 
+QString serialPortHandler::hexBytesSerial(QByteArray &cmd)
+{
+    //**************************Visuals*******************
+    QString hexOutput = cmd.toHex().toUpper();
+    QString formattedHexOutput;
+
+    for (int i = 0; i < hexOutput.size(); i += 2) {
+        if (i > 0) {
+            formattedHexOutput += " ";
+        }
+        formattedHexOutput += hexOutput.mid(i, 2);
+    }
+    return formattedHexOutput;
+    //**************************Visuals*******************
+}
+
 void serialPortHandler::readData()
 {
     qDebug()<<"------------------------------------------------------------------------------------";
@@ -122,227 +138,115 @@ void serialPortHandler::readData()
     //powerId to avoid that warning QByteRef calling out of bond error
     quint8 powerId = 0x00;
 
-    //for special cases : large data
-    if(msgId == 0xab)
+    if(msgId == 0x01)
     {
-        qDebug()<<"In Special case Pyro Lp line check";
-        qDebug() << "Extracted msgId:" <<hex<<msgId;
+        qDebug() << "msgId:" <<hex<<msgId;
 
-        if(buffer.size() == 6)
+        if(buffer.size() == 17
+                && static_cast<unsigned char>(buffer[0]) == 0x54
+                && static_cast<unsigned char>(buffer[1]) == 0x01
+                && static_cast<unsigned char>(buffer[16]) == chkSum(buffer))
         {
+            powerId = 0x01;
             ResponseData = buffer;
             buffer.clear();
+            //static function of MainWindow doesn't need to create object of class
+            executeWriteToNotes("Power Card Data received bytes check: "+ResponseData.toHex());
         }
-        while(buffer.size() == 1084)
+        else
         {
-            ResponseData = buffer.left(1084);
-            buffer.remove(0,1084);
+            executeWriteToNotes("Required 17 bytes Received bytes: "+QString::number(buffer.size())
+                                     +" "+buffer.toHex());
         }
 
     }
-    else if(msgId == 0x17)
+    else if(msgId == 0x02)
     {
-        qDebug()<<"In Special case Get Dau Data Command";
-        qDebug() << "Extracted msgId:" <<hex<<msgId;
+        qDebug() << "msgId:" <<hex<<msgId;
 
-        if(buffer.size() == 6)
+        if(buffer.size() == 6
+                && static_cast<unsigned char>(buffer[0]) == 0x54
+                && static_cast<unsigned char>(buffer[1]) == 0x02
+                && static_cast<unsigned char>(buffer[2]) == 0x31
+                && static_cast<unsigned char>(buffer[5]) == chkSum(buffer))
         {
+            powerId = 0x02;
             ResponseData = buffer;
             buffer.clear();
-        }
-        while(buffer.size() == 533)
-        {
-            ResponseData = buffer.left(533);
-            buffer.remove(0,533);
-        }
-    }
-    else if(msgId == 0x9b)
-    {
-        qDebug()<<"In Special case Missile on/off";
-        qDebug() << "Extracted msgId:" <<hex<<msgId;
+            executeWriteToNotes("DAC_INA_1p1n received bytes: "+ResponseData.toHex());
 
-        if(buffer.size() == 6)
-        {
-            ResponseData = buffer;
-            buffer.clear();
         }
-        while(buffer.size() == 10)
+        else
         {
-            ResponseData = buffer.left(10);
-            buffer.remove(0,10);
-        }
-    }
-    else if(msgId == 0x07)
-    {
-        qDebug()<<"In Special case Lp OBC RS422";
-        qDebug() << "Extracted msgId:" <<hex<<msgId;
-
-        if(buffer.size() == 6)
-        {
-            ResponseData = buffer;
-            buffer.clear();
-        }
-        while(buffer.size() == 5)
-        {
-            ResponseData = buffer.left(5);
-            buffer.remove(0,5);
-        }
-    }
-    else if(msgId == 0x2a)
-    {
-        qDebug()<<"In Special case EMA Start/stop";
-        qDebug() << "Extracted msgId:" <<hex<<msgId;
-
-        if(buffer.size() == 6)
-        {
-            ResponseData = buffer;
-            buffer.clear();
-        }
-        while(buffer.size() == 13)
-        {
-            ResponseData = buffer.left(13);
-            buffer.remove(0,13);
+            executeWriteToNotes("Required 6 bytes Received bytes: "+QString::number(buffer.size())
+                                     +" "+buffer.toHex());
         }
     }
     else
     {
         //do nothing
-        qDebug()<<"do nothing not a specified size";
+        qDebug()<<"do nothing not a specified size/unknown msgId";
+        executeWriteToNotes("Fatal Error 404");
     }
 
-    if(ResponseData.size() < 5)
-    {
-        qDebug()<<"Unexpected response size before"<<ResponseData.size();
-    }
 
     //SPECIAL NOTE : FOR STARTING NEW PROJECT #####################################################
-    //1. if condition is enough don't use while loop for checking ex:- here don't need while loop
 
-    /* if(buffer.size() == 6)
-        {
-            ResponseData = buffer;
-            buffer.clear();
-        }
-        while(buffer.size() == 13)
-        {
-            ResponseData = buffer.left(13);
-            buffer.remove(0,13);
-        }
-    */
+    // 1. Always ask data type of bytes if 2 bytes whether it is short or unsigned short that's like.
 
-    /* 2. Add CheckSum and Header Validations if not ask embedded team
-      Ex : if(buffer.size() == 9
-           && static_cast<unsigned char>(buffer[0]) == 0x54
-           && static_cast<unsigned char>(buffer[1]) == 0x25
-           && static_cast<unsigned char>(buffer[8]) == chkSum(buffer))
-    */
+    // 2. mainwindow button (command send) packet structure
 
-    /* 3. use PowerId in switch case only msgId for both if and switch can make problem
-     * Ex : if msgId == 0x01 then ResponseData need to be filled
-     * but in switch msgId == 0x01 i am asking myVal = ResponseData.mid(3,2) because
-     * msgId is common, without ResponseData filling in if condition you are asking to give
-     * bytes from ResponseData like above this can cause error like below
-     * Using QByteRef with an index pointing outside the valid range of a QByteArray.
-     *  The corresponding behavior is deprecated, and will be changed in a future version of Qt.
-     * for 5.14 version it is ok, but there will be problem in future.
-     */
+    /*
 
-    // 4. Always ask data type of bytes if 2 bytes whether it is short or unsigned short that's like.
-
-    // 5. just start timer in button() for max 2 sec. : responseTimer and powerId are implemented just use'm.
-    // just like this : responseTimer->start(2000); // 2 Sec timer, powerId = 0x01; in if conditions
-    /* else if(msgId == 0x08)
-    {
-        qDebug() << "msgId:" <<hex<<msgId;
-
-        if(buffer.size() == 5
-           && static_cast<unsigned char>(buffer[0]) == 0x54
-           && static_cast<unsigned char>(buffer[1]) == 0x04
-           && static_cast<unsigned char>(buffer[2]) == 0x34
-           && static_cast<unsigned char>(buffer[4]) == chkSum(buffer))
-        {
-            powerId = 0x08;
-            ResponseData = buffer;
-            buffer.clear();
-            executeWriteToNotes("T_IN_HI_2 received bytes: "+ResponseData.toHex());
-
-        }
-        else
-        {
-            executeWriteToNotes("Required 5 bytes Received bytes: "+QString::number(buffer.size())
-                                     +" "+buffer.toHex());
-        }
-    }
-	 Example packet structure
-    void MainWindow::on_pushButton_RS485_clicked()
+    void MainWindow::on_pushButton_cpcHI_1_clicked()
     {
         // Start the timeout timer
         responseTimer->start(2000); // 2 Sec timer
-        
+
         QByteArray command;
-        
-        command.append(0x09); //1
-        command.append(0x13); //2
-        command.append(0xa4); //3
-        command.append(0xff); //4
-        command.append(0x41); //5
-        
-        qDebug() << "RS485 cmd sent : " + hexBytes(command);
-        writeToNotes("RS485 cmd sent : " + hexBytes(command));
-        
-        
-        emit sendMsgId(0x02);
+
+        command.append(0x47); //1
+        command.append(0x04); //2
+        command.append(0x31); //3
+
+        quint8 checkSum = calculateChecksum(command);
+
+        //checksum
+        command.append(checkSum); //total 4 bytes
+
+
+        qDebug() << "cpcHi1 cmd sent : " + hexBytes(command);
+        writeToNotes("cpcHi1 cmd sent : " + hexBytes(command));
+
+
+        emit sendMsgId(0x05);
         serialObj->writeData(command);
     }
+
     */
 
     // #############################################################################################
 
     switch(powerId)
     {
-    case 0x9b:
+    case 0x01:
     {
-
-
-
-    }
-        break;
-
-    case 0x07:
-    {
-
-
-    }
-        break;
-
-    case 0xab:
-    {
-
-
-
-
-    }
-        break;
-
-    case 0x17:
-    {
-
-    }
-        break;
-
-    case 0x2a:
-    {
-
-
-
+        if(ResponseData.toHex() == "ff0aff")
+        {
+            emit portOpening("ACK_01");
+        }
+        else
+        {
+            emit portOpening("NACK_01");
+        }
     }
         break;
 
     default:
     {
-        qDebug() << "Unknown msgId: " <<hex << msgId << " with data: " << ResponseData.toHex();
-        emit portOpening("Unknown msgId: " + QString::number(msgId,16)+" with data: "+ResponseData.toHex());
+        qDebug() << "Unknown powerId: " <<hex << powerId << " with data: " << ResponseData.size();
     }
+
     }
 
 }

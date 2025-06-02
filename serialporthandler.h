@@ -46,6 +46,8 @@ public:
 
     quint8 chkSum(const QByteArray &data);
 
+    QString hexBytesSerial(QByteArray &cmd);
+
 
 signals:
 

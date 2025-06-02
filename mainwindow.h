@@ -9,6 +9,11 @@
 #include <QFile>
 #include <QDateTime>
 #include <QTimer>
+#include <windows.h>
+#include <psapi.h>
+#include <QElapsedTimer>
+#include <QEventLoop>
+
 
 
 QT_BEGIN_NAMESPACE
@@ -37,6 +42,18 @@ public:
     quint8 calculateChecksum(const QByteArray &data);
     QString hexBytes(QByteArray &cmd);
 
+    //Extra features
+    void printMemoryUsage();
+
+    void elapseStart();
+    void elapseEnd(bool goFurther = false, const QString &label = "");
+
+    inline void pauseFor(int milliseconds) {
+        QEventLoop loop;
+        QTimer::singleShot(milliseconds, &loop, &QEventLoop::quit);  // After delay, quit the event loop
+        loop.exec();  // Start the event loop and wait for it to quit
+    }
+
 private slots:
         void onPortSelected(const QString &portName);
 
@@ -61,6 +78,9 @@ private:
 
     //Response Time waiting timer
      QTimer *responseTimer = nullptr; // Timer to track response timeout
+
+    //Extras
+     QElapsedTimer elapsedTimer;
 
 };
 #endif // MAINWINDOW_H
