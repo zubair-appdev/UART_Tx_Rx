@@ -21,3 +21,6 @@ Ver 1.5 ------------------------------------------------------
 Ver 1.6 ------------------------------------------------------
 - added packet structure command for easy packet making.
 
+Ver 1.7 -------------------------------------------------------
+- Added Extra features such as elapsedTimer, printMemoryUsage, pauseFor()
+- changed comment section for new project now it is clear
