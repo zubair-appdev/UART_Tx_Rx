@@ -142,20 +142,20 @@ void serialPortHandler::readData()
     {
         qDebug() << "msgId:" <<hex<<msgId;
 
-        if(buffer.size() == 17
-                && static_cast<unsigned char>(buffer[0]) == 0x54
-                && static_cast<unsigned char>(buffer[1]) == 0x01
-                && static_cast<unsigned char>(buffer[16]) == chkSum(buffer))
+        if(buffer.size() == 5
+                && static_cast<unsigned char>(buffer[0]) == 0x41
+                && static_cast<unsigned char>(buffer[1]) == 0x43
+                && static_cast<unsigned char>(buffer[2]) == 0x4B
+                && static_cast<unsigned char>(buffer[4]) == chkSum(buffer))
         {
             powerId = 0x01;
             ResponseData = buffer;
             buffer.clear();
-            //static function of MainWindow doesn't need to create object of class
-            executeWriteToNotes("Power Card Data received bytes check: "+ResponseData.toHex());
+            executeWriteToNotes("Set User Value received bytes: "+ResponseData.toHex());
         }
         else
         {
-            executeWriteToNotes("Required 17 bytes Received bytes: "+QString::number(buffer.size())
+            executeWriteToNotes("Required 5 bytes Received bytes: "+QString::number(buffer.size())
                                      +" "+buffer.toHex());
         }
 
@@ -164,23 +164,23 @@ void serialPortHandler::readData()
     {
         qDebug() << "msgId:" <<hex<<msgId;
 
-        if(buffer.size() == 6
-                && static_cast<unsigned char>(buffer[0]) == 0x54
-                && static_cast<unsigned char>(buffer[1]) == 0x02
-                && static_cast<unsigned char>(buffer[2]) == 0x31
-                && static_cast<unsigned char>(buffer[5]) == chkSum(buffer))
+        if(buffer.size() == 5
+                && static_cast<unsigned char>(buffer[0]) == 0x41
+                && static_cast<unsigned char>(buffer[1]) == 0x43
+                && static_cast<unsigned char>(buffer[2]) == 0x4B
+                && static_cast<unsigned char>(buffer[4]) == chkSum(buffer))
         {
             powerId = 0x02;
             ResponseData = buffer;
             buffer.clear();
-            executeWriteToNotes("DAC_INA_1p1n received bytes: "+ResponseData.toHex());
-
+            executeWriteToNotes("KYC Value received bytes: "+ResponseData.toHex());
         }
         else
         {
-            executeWriteToNotes("Required 6 bytes Received bytes: "+QString::number(buffer.size())
+            executeWriteToNotes("Required 5 bytes Received bytes: "+QString::number(buffer.size())
                                      +" "+buffer.toHex());
         }
+
     }
     else
     {
@@ -231,20 +231,22 @@ void serialPortHandler::readData()
     {
     case 0x01:
     {
-        if(ResponseData.toHex() == "ff0aff")
-        {
-            emit portOpening("ACK_01");
-        }
-        else
-        {
-            emit portOpening("NACK_01");
-        }
+        //set user response
+        emit guiDisplay(ResponseData);
+    }
+        break;
+
+    case 0x02:
+    {
+        // kys response
+        emit guiDisplay(ResponseData);
     }
         break;
 
     default:
     {
         qDebug() << "Unknown powerId: " <<hex << powerId << " with data: " << ResponseData.size();
+
     }
 
     }

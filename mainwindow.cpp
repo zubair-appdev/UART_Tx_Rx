@@ -29,6 +29,9 @@ MainWindow::MainWindow(QWidget *parent)
     //debugging signals
     connect(serialObj,&serialPortHandler::portOpening,this,&MainWindow::portStatus);
 
+    //gui display signal
+    connect(serialObj,&serialPortHandler::guiDisplay,this,&MainWindow::showGuiData);
+
     //reset previous notes #Notes things : Logging file
     resetLogFile();
     writeToNotes(+"    ******    "+QCoreApplication::applicationName() +
@@ -223,5 +226,10 @@ void MainWindow::portStatus(const QString &data)
     }
 
     ui->textEdit_rawBytes->append(data);
+}
+
+void MainWindow::showGuiData(const QByteArray &byteArrayData)
+{
+    QByteArray data = byteArrayData;
 }
 

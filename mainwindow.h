@@ -59,6 +59,8 @@ private slots:
 
         void portStatus(const QString&);
 
+        void showGuiData(const QByteArray &byteArrayData);
+
         //response time handling
 
         void handleTimeout();

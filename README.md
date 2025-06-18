@@ -24,3 +24,9 @@ Ver 1.6 ------------------------------------------------------
 Ver 1.7 -------------------------------------------------------
 - Added Extra features such as elapsedTimer, printMemoryUsage, pauseFor()
 - changed comment section for new project now it is clear
+
+Ver 1.8 -------------------------------------------------------
+- Added a signal for guiDisplay in QByteArray
+- Changed receiving structure entire validation happens in if conditions.
+- Calculation parts in switch and just emit.
+- in mainwindow.cpp showGuiData for complete gui purpose no calculations.
