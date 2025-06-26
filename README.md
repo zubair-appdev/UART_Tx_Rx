@@ -30,3 +30,7 @@ Ver 1.8 -------------------------------------------------------
 - Changed receiving structure entire validation happens in if conditions.
 - Calculation parts in switch and just emit.
 - in mainwindow.cpp showGuiData for complete gui purpose no calculations.
+
+Ver 1.9 -----------------------------------------------------
+- Added pointer size for 32 or 64 bit
+- modified pauseFor()

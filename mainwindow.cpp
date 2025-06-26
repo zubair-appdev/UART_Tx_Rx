@@ -48,6 +48,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(serialObj, &serialPortHandler::dataReceived, this, &MainWindow::onDataReceived);
     //************************************************************##############
 
+    writeToNotes("Pointer Size: "+QString::number(sizeof(void *))+" If it is 8 : 64 bit else 4 means 32 bit");
+
 }
 
 MainWindow::~MainWindow()

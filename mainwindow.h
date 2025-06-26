@@ -13,6 +13,8 @@
 #include <psapi.h>
 #include <QElapsedTimer>
 #include <QEventLoop>
+#include <QApplication>
+
 
 
 
@@ -52,6 +54,7 @@ public:
         QEventLoop loop;
         QTimer::singleShot(milliseconds, &loop, &QEventLoop::quit);  // After delay, quit the event loop
         loop.exec();  // Start the event loop and wait for it to quit
+        QApplication::processEvents();  // Keep UI healthy
     }
 
 private slots:
