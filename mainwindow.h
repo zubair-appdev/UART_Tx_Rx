@@ -14,7 +14,10 @@
 #include <QElapsedTimer>
 #include <QEventLoop>
 #include <QApplication>
-
+#include <QFuture>
+#include <QFutureWatcher>
+#include <QtConcurrent/QtConcurrent>
+#include <QLabel>
 
 
 
@@ -49,6 +52,8 @@ public:
 
     void elapseStart();
     void elapseEnd(bool goFurther = false, const QString &label = "");
+
+    QDialog *createPleaseWaitDialog(const QString &text);
 
     inline void pauseFor(int milliseconds) {
         QEventLoop loop;

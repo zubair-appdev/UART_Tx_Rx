@@ -208,6 +208,35 @@ void MainWindow::elapseEnd(bool goFurther, const QString &label)
         elapsedTimer.restart();
 }
 
+QDialog* MainWindow::createPleaseWaitDialog(const QString &text)
+{
+    QDialog *dlg = new QDialog(this);  // Create a QDialog with MainWindow as parent
+    dlg->setWindowFlags(Qt::FramelessWindowHint | Qt::Dialog);
+    dlg->setAttribute(Qt::WA_DeleteOnClose);  // Auto-delete when closed
+    dlg->setModal(true);  // Prevent interaction with the rest of the UI
+
+    dlg->setStyleSheet(R"(
+        QDialog { background-color: #f8f8f8; border: 2px solid #0078D7; border-radius: 8px; }
+        QLabel { font-size: 16px; padding: 20px; }
+    )");
+
+    QVBoxLayout *layout = new QVBoxLayout(dlg);  // Layout for vertical arrangement
+    layout->addWidget(new QLabel(text));         // Message shown in the dialog
+
+    dlg->setLayout(layout);         // Apply layout
+    dlg->adjustSize();              // Resize dialog based on content
+    dlg->setFixedSize(dlg->sizeHint());  // Fix size to avoid resizing by user
+
+    dlg->show();                    // Show the dialog
+    QApplication::processEvents(); // Force the event loop to process so it appears immediately
+
+    return dlg;  // Return the pointer so you can manually close/delete it later
+
+//    Using of this function
+//    QDialog *dlg = createPleaseWaitDialog("⏳ Please Wait ...");
+//    dlg->close();
+}
+
 
 
 void MainWindow::portStatus(const QString &data)
