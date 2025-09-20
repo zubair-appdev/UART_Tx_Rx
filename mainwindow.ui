@@ -59,9 +59,9 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>250</y>
+      <y>260</y>
       <width>661</width>
-      <height>146</height>
+      <height>141</height>
      </rect>
     </property>
     <property name="font">
@@ -75,7 +75,17 @@
     <property name="title">
      <string>Log data</string>
     </property>
-    <layout class="QGridLayout" name="gridLayout_5">
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="0" column="0" rowspan="2">
+      <widget class="QTextEdit" name="textEdit_rawBytes">
+       <property name="styleSheet">
+        <string notr="true">border : none;</string>
+       </property>
+       <property name="acceptRichText">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
      <item row="0" column="1">
       <widget class="QPushButton" name="pushButton_clear">
        <property name="font">
@@ -88,13 +98,15 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="0">
-      <widget class="QTextEdit" name="textEdit_rawBytes">
-       <property name="styleSheet">
-        <string notr="true">border : none;</string>
+     <item row="1" column="1">
+      <widget class="QPushButton" name="pushButton_calibrateScreen">
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
        </property>
-       <property name="acceptRichText">
-        <bool>true</bool>
+       <property name="text">
+        <string>Calibrate Screen</string>
        </property>
       </widget>
      </item>

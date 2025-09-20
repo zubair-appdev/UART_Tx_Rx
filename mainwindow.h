@@ -18,6 +18,9 @@
 #include <QFutureWatcher>
 #include <QtConcurrent/QtConcurrent>
 #include <QLabel>
+#include <QScreen>
+#include <QInputDialog>
+
 
 
 
@@ -74,6 +77,8 @@ private slots:
         void handleTimeout();
 
         void onDataReceived();
+
+        void on_pushButton_calibrateScreen_clicked();
 
 signals:
     void sendMsgId(quint8 id);

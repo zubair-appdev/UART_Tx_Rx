@@ -37,3 +37,6 @@ Ver 1.9 -----------------------------------------------------
 
 Ver 2.0 ----------------------------------------------------
 - Added *createPleaseWaitDialog()
+
+Ver 2.1 ----------------------------------------------------
+- Added "Calibrate Screen" button (automatically adjusts widgets and fonts based on screen DPI).

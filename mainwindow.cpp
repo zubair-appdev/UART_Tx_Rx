@@ -264,3 +264,39 @@ void MainWindow::showGuiData(const QByteArray &byteArrayData)
     QByteArray data = byteArrayData;
 }
 
+
+void MainWindow::on_pushButton_calibrateScreen_clicked()
+{
+    QScreen *screen = QGuiApplication::primaryScreen();
+    QSize res = screen->size();
+
+    QMessageBox::StandardButton choice = QMessageBox::question(
+        this, "Calibrate Screen",
+        "Do you want to enter your screen size (custom DPI) or reset to system default?",
+        QMessageBox::Yes | QMessageBox::No);
+
+    if (choice == QMessageBox::No) {
+        // Reset to default
+        QSettings settings("settings.ini", QSettings::IniFormat);
+        settings.remove("Display/calibratedDPI");   // or setValue("Display/calibratedDPI", 0)
+        QMessageBox::information(this, "Calibration Removed",
+                                 "Screen DPI reset to system default.\nRestart app to apply.");
+        return;
+    }
+
+    // Custom DPI path
+    bool ok;
+    double diagonalInches = QInputDialog::getDouble(
+        this, "Calibrate Screen",
+        "Enter your screen size to adjust (in inches):",
+        14.0, 5.0, 100.0, 1, &ok);
+    if (!ok) return;
+
+    double ppi = std::sqrt(res.width()*res.width() + res.height()*res.height()) / diagonalInches;
+
+    QSettings settings("settings.ini", QSettings::IniFormat);
+    settings.setValue("Display/calibratedDPI", static_cast<int>(ppi));
+
+    QMessageBox::information(this, "Calibration Done",
+                             QString("DPI set to %1.\nRestart app to apply.").arg(ppi));
+}
