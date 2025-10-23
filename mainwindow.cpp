@@ -270,33 +270,53 @@ void MainWindow::on_pushButton_calibrateScreen_clicked()
     QScreen *screen = QGuiApplication::primaryScreen();
     QSize res = screen->size();
 
+    QSettings settings("settings.ini", QSettings::IniFormat);
+
     QMessageBox::StandardButton choice = QMessageBox::question(
         this, "Calibrate Screen",
-        "Do you want to enter your screen size (custom DPI) or reset to system default?",
+        "Do you want to enter custom screen details (width, height, diagonal) or reset to system default?",
         QMessageBox::Yes | QMessageBox::No);
 
     if (choice == QMessageBox::No) {
         // Reset to default
-        QSettings settings("settings.ini", QSettings::IniFormat);
-        settings.remove("Display/calibratedDPI");   // or setValue("Display/calibratedDPI", 0)
+        settings.remove("Display/calibratedDPI");
+        settings.remove("Display/width");
+        settings.remove("Display/height");
+        settings.remove("Display/diagonal");
         QMessageBox::information(this, "Calibration Removed",
                                  "Screen DPI reset to system default.\nRestart app to apply.");
         return;
     }
 
-    // Custom DPI path
-    bool ok;
-    double diagonalInches = QInputDialog::getDouble(
-        this, "Calibrate Screen",
-        "Enter your screen size to adjust (in inches):",
-        14.0, 5.0, 100.0, 1, &ok);
+    // Custom input
+    bool ok = false;
+    int width = QInputDialog::getInt(this, "Screen Width",
+                                     "Enter screen width (pixels):",
+                                     res.width(), 100, 10000, 1, &ok);
     if (!ok) return;
 
-    double ppi = std::sqrt(res.width()*res.width() + res.height()*res.height()) / diagonalInches;
+    int height = QInputDialog::getInt(this, "Screen Height",
+                                      "Enter screen height (pixels):",
+                                      res.height(), 100, 10000, 1, &ok);
+    if (!ok) return;
 
-    QSettings settings("settings.ini", QSettings::IniFormat);
+    double diagonalInches = QInputDialog::getDouble(
+        this, "Screen Diagonal",
+        "Enter screen diagonal size (in inches):",
+        settings.value("Display/diagonal", 14.0).toDouble(), 3.0, 100.0, 1, &ok);
+    if (!ok) return;
+
+    // Calculate DPI
+    double ppi = std::sqrt(width * width + height * height) / diagonalInches;
+
+    // Save all values
+    settings.setValue("Display/width", width);
+    settings.setValue("Display/height", height);
+    settings.setValue("Display/diagonal", diagonalInches);
     settings.setValue("Display/calibratedDPI", static_cast<int>(ppi));
 
     QMessageBox::information(this, "Calibration Done",
-                             QString("DPI set to %1.\nRestart app to apply.").arg(ppi));
+                             QString("Resolution: %1 x %2\nDiagonal: %3 in\nDPI set to %4.\nRestart app to apply.")
+                             .arg(width).arg(height).arg(diagonalInches).arg(ppi, 0, 'f', 2));
 }
+

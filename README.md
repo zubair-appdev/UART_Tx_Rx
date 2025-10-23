@@ -40,3 +40,6 @@ Ver 2.0 ----------------------------------------------------
 
 Ver 2.1 ----------------------------------------------------
 - Added "Calibrate Screen" button (automatically adjusts widgets and fonts based on screen DPI).
+
+Ver 2.2 ----------------------------------------------------
+- Added editable resolution inputs also and showing these all parameters in debug_notes for calibrate screen button.
