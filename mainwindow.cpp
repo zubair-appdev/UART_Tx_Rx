@@ -208,33 +208,77 @@ void MainWindow::elapseEnd(bool goFurther, const QString &label)
         elapsedTimer.restart();
 }
 
-QDialog* MainWindow::createPleaseWaitDialog(const QString &text)
+QDialog* MainWindow::createPleaseWaitDialog(const QString &text, int timeSeconds)
 {
-    QDialog *dlg = new QDialog(this);  // Create a QDialog with MainWindow as parent
+    // --- Create dialog ---
+    QDialog *dlg = new QDialog(this);
     dlg->setWindowFlags(Qt::FramelessWindowHint | Qt::Dialog);
-    dlg->setAttribute(Qt::WA_DeleteOnClose);  // Auto-delete when closed
-    dlg->setModal(true);  // Prevent interaction with the rest of the UI
+    dlg->setAttribute(Qt::WA_DeleteOnClose);
+    dlg->setModal(true);
 
+    // --- Styling ---
     dlg->setStyleSheet(R"(
-        QDialog { background-color: #f8f8f8; border: 2px solid #0078D7; border-radius: 8px; }
-        QLabel { font-size: 16px; padding: 20px; }
+        QDialog {
+            background-color: #f8f8f8;
+            border: 2px solid #0078D7;
+            border-radius: 8px;
+        }
+        QLabel {
+            font-size: 16px;
+            padding: 10px;
+        }
     )");
 
-    QVBoxLayout *layout = new QVBoxLayout(dlg);  // Layout for vertical arrangement
-    layout->addWidget(new QLabel(text));         // Message shown in the dialog
+    // --- Layout and main label ---
+    QVBoxLayout *layout = new QVBoxLayout(dlg);
+    QLabel *mainLabel = new QLabel(text, dlg);
+    layout->addWidget(mainLabel);
 
-    dlg->setLayout(layout);         // Apply layout
-    dlg->adjustSize();              // Resize dialog based on content
-    dlg->setFixedSize(dlg->sizeHint());  // Fix size to avoid resizing by user
+    QLabel *timerLabel = nullptr;
 
-    dlg->show();                    // Show the dialog
-    QApplication::processEvents(); // Force the event loop to process so it appears immediately
+    // --- Optional countdown ---
+    if (timeSeconds > 0)
+    {
+        timerLabel = new QLabel(QString("Remaining: %1s").arg(timeSeconds), dlg);
+        timerLabel->setAlignment(Qt::AlignCenter);
+        timerLabel->setStyleSheet("color: #0078D7; font-weight: bold;");
+        layout->addWidget(timerLabel);
 
-    return dlg;  // Return the pointer so you can manually close/delete it later
+        QTimer *countdown = new QTimer(dlg);
+        countdown->setInterval(1000);
 
-//    Using of this function
-//    QDialog *dlg = createPleaseWaitDialog("⏳ Please Wait ...");
-//    dlg->close();
+        int *remaining = new int(timeSeconds);
+
+        QObject::connect(countdown, &QTimer::timeout, dlg, [countdown, remaining, timerLabel]() {
+            (*remaining)--;
+            if (*remaining <= 0)
+            {
+                countdown->stop();
+                delete remaining;
+            }
+            else
+            {
+                timerLabel->setText(QString("Remaining: %1s").arg(*remaining));
+            }
+        });
+
+        countdown->start();
+    }
+
+    dlg->setLayout(layout);
+    dlg->adjustSize();
+    dlg->setFixedSize(dlg->sizeHint());
+    dlg->show();
+
+    QApplication::processEvents(); // ensures dialog appears immediately
+
+    return dlg;
+
+    //    Using of this function
+    //    QDialog *dlg = createPleaseWaitDialog("⏳ Please Wait ...");
+    //    OR
+    //    QDialog *dlg = createPleaseWaitDialog("⏳ Please Wait ...",10); //if you know how much time to wait
+    //    dlg->close();
 }
 
 

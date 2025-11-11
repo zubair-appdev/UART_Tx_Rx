@@ -43,3 +43,6 @@ Ver 2.1 ----------------------------------------------------
 
 Ver 2.2 ----------------------------------------------------
 - Added editable resolution inputs also and showing these all parameters in debug_notes for calibrate screen button.
+
+Ver 2.3 ----------------------------------------------------
+- Updated *createPleaseWaitDialog() to take time parameter also.
