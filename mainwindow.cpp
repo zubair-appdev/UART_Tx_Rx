@@ -281,6 +281,30 @@ QDialog* MainWindow::createPleaseWaitDialog(const QString &text, int timeSeconds
     //    dlg->close();
 }
 
+void MainWindow::blinkLabel(QLabel *label,
+                            int durationMs,
+                            const QString &text)
+{
+    if(!label)
+        return;
+
+    // Save original style
+    QString originalStyle = label->styleSheet();
+
+    label->setText(text);
+
+    // Make label yellow
+    label->setStyleSheet(
+                "background-color: yellow;"
+                );
+
+    // After duration → restore style
+    QTimer::singleShot(durationMs, this,
+                       [=]()
+    {
+        label->setStyleSheet(originalStyle);
+    });
+}
 
 
 void MainWindow::portStatus(const QString &data)

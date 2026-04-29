@@ -46,3 +46,6 @@ Ver 2.2 ----------------------------------------------------
 
 Ver 2.3 ----------------------------------------------------
 - Updated *createPleaseWaitDialog() to take time parameter also.
+
+Ver 2.4 ----------------------------------------------------
+- Added blinkLabel and fusion(stylesheet) setting commented if needed uncomment it.

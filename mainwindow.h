@@ -65,6 +65,10 @@ public:
         QApplication::processEvents();  // Keep UI healthy
     }
 
+    void blinkLabel(QLabel *label,
+                    int durationMs,
+                    const QString &text);
+
 private slots:
         void onPortSelected(const QString &portName);
 

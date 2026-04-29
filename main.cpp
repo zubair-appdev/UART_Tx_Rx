@@ -6,6 +6,9 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
+    // Apply Fusion style globally
+    //QApplication::setStyle("Fusion");
+
     QSettings settings("settings.ini", QSettings::IniFormat);
 
     int ppi = settings.value("Display/calibratedDPI", 0).toInt();
