@@ -4,10 +4,14 @@
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
-
-    // Apply Fusion style globally
+    // Apply Fusion style globally (if working with linux + diff resolution screens of 7in or any)
     //QApplication::setStyle("Fusion");
+
+    // For High Scale DPI fonts and images (for 4k) in Qt6 automatically added
+    //QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+    //QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
+
+    QApplication a(argc, argv);
 
     QSettings settings("settings.ini", QSettings::IniFormat);
 

@@ -49,3 +49,6 @@ Ver 2.3 ----------------------------------------------------
 
 Ver 2.4 ----------------------------------------------------
 - Added blinkLabel and fusion(stylesheet) setting commented if needed uncomment it.
+
+Ver 2.5 ----------------------------------------------------
+- Added EnableHighDpiScaling and useHighDpiPixmaps flags in main.cpp (commented) if 4k resolution displays are there uncomment it.
