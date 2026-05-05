@@ -52,3 +52,6 @@ Ver 2.4 ----------------------------------------------------
 
 Ver 2.5 ----------------------------------------------------
 - Added EnableHighDpiScaling and useHighDpiPixmaps flags in main.cpp (commented) if 4k resolution displays are there uncomment it.
+
+Ver 2.6 ---------------------------------------------------
+- Updated blinkLabel() so that now it takes multiple clicks still show proper ui behaviour.

@@ -285,25 +285,34 @@ void MainWindow::blinkLabel(QLabel *label,
                             int durationMs,
                             const QString &text)
 {
-    if(!label)
+    if (!label)
         return;
 
-    // Save original style
-    QString originalStyle = label->styleSheet();
+    // Create timer if not exists for this label
+    if (!blinkTimers.contains(label)) {
+        QTimer *timer = new QTimer(this);
+        timer->setSingleShot(true);
 
+        connect(timer, &QTimer::timeout, this, [=]() {
+            label->setStyleSheet("");
+            label->setText("Status");
+        });
+
+        blinkTimers[label] = timer;
+    }
+
+    QTimer *timer = blinkTimers[label];
+
+    // 🔥 KEY: cancel previous pending reset
+    timer->stop();
+
+    // Update UI immediately
     label->setText(text);
 
-    // Make label yellow
-    label->setStyleSheet(
-                "background-color: yellow;"
-                );
+    label->setStyleSheet("background-color: yellow;");
 
-    // After duration → restore style
-    QTimer::singleShot(durationMs, this,
-                       [=]()
-    {
-        label->setStyleSheet(originalStyle);
-    });
+    // Start fresh timer
+    timer->start(durationMs);
 }
 
 

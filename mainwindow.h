@@ -70,19 +70,19 @@ public:
                     const QString &text);
 
 private slots:
-        void onPortSelected(const QString &portName);
+    void onPortSelected(const QString &portName);
 
-        void portStatus(const QString&);
+    void portStatus(const QString&);
 
-        void showGuiData(const QByteArray &byteArrayData);
+    void showGuiData(const QByteArray &byteArrayData);
 
-        //response time handling
+    //response time handling
 
-        void handleTimeout();
+    void handleTimeout();
 
-        void onDataReceived();
+    void onDataReceived();
 
-        void on_pushButton_calibrateScreen_clicked();
+    void on_pushButton_calibrateScreen_clicked();
 
 signals:
     void sendMsgId(quint8 id);
@@ -96,10 +96,12 @@ private:
     static QTextStream logStream;
 
     //Response Time waiting timer
-     QTimer *responseTimer = nullptr; // Timer to track response timeout
+    QTimer *responseTimer = nullptr; // Timer to track response timeout
 
     //Extras
-     QElapsedTimer elapsedTimer;
+    QElapsedTimer elapsedTimer;
 
+    //blinkLabel timers
+    QHash<QLabel*, QTimer*> blinkTimers;
 };
 #endif // MAINWINDOW_H
