@@ -17,8 +17,8 @@
    <widget class="QPushButton" name="pushButton_portsRefresh">
     <property name="geometry">
      <rect>
-      <x>600</x>
-      <y>40</y>
+      <x>610</x>
+      <y>30</y>
       <width>71</width>
       <height>31</height>
      </rect>
@@ -39,8 +39,8 @@
    <widget class="QComboBox" name="comboBox_ports">
     <property name="geometry">
      <rect>
-      <x>510</x>
-      <y>40</y>
+      <x>520</x>
+      <y>30</y>
       <width>71</width>
       <height>31</height>
      </rect>
@@ -55,13 +55,13 @@
      <string notr="true"/>
     </property>
    </widget>
-   <widget class="QGroupBox" name="groupBox_4">
+   <widget class="QPushButton" name="pushButton_calibrateScreen">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>260</y>
-      <width>661</width>
-      <height>141</height>
+      <x>30</x>
+      <y>40</y>
+      <width>111</width>
+      <height>24</height>
      </rect>
     </property>
     <property name="font">
@@ -69,48 +69,9 @@
       <pointsize>10</pointsize>
      </font>
     </property>
-    <property name="styleSheet">
-     <string notr="true"/>
+    <property name="text">
+     <string>Calibrate Screen</string>
     </property>
-    <property name="title">
-     <string>Log data</string>
-    </property>
-    <layout class="QGridLayout" name="gridLayout">
-     <item row="0" column="0" rowspan="2">
-      <widget class="QTextEdit" name="textEdit_rawBytes">
-       <property name="styleSheet">
-        <string notr="true">border : none;</string>
-       </property>
-       <property name="acceptRichText">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QPushButton" name="pushButton_clear">
-       <property name="font">
-        <font>
-         <pointsize>10</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>Clear</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QPushButton" name="pushButton_calibrateScreen">
-       <property name="font">
-        <font>
-         <pointsize>10</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>Calibrate Screen</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">

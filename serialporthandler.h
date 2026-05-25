@@ -51,7 +51,7 @@ public:
 
 signals:
 
-    void portOpening(const QString &); //signal for dumping data from serialPortHandler to textEdit_RawBytes : QString
+    void portOpening(const QString &); //signal for sending QString data to GUI (Especially used to COM Port Handling) : QString
 
     void guiDisplay(const QByteArray &byteArrayData); //signal for sending byteArray data to GUI : QByteArray
 

@@ -105,7 +105,6 @@ QString serialPortHandler::hexBytesSerial(QByteArray &cmd)
 void serialPortHandler::readData()
 {
     qDebug()<<"------------------------------------------------------------------------------------";
-    emit portOpening("------------------------------------------------------------------------------------");
     QByteArray ResponseData;
 
     // Read data from the serial port
@@ -130,7 +129,6 @@ void serialPortHandler::readData()
 
     qDebug()<<buffer.toHex()<<" Raw buffer data";
     qDebug()<<buffer.size()<<" :size";
-    emit portOpening("Raw readyRead data: "+buffer.toHex());
 
 
     //Direct taking msgId from mainWindow

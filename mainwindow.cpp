@@ -12,8 +12,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     serialObj =   new serialPortHandler(this);
 
-    connect(ui->pushButton_clear,&QPushButton::clicked,ui->textEdit_rawBytes,&QTextEdit::clear);
-
     ui->comboBox_ports->addItems(serialObj->availablePorts());
 
     connect(ui->pushButton_portsRefresh,&QPushButton::clicked,this,&MainWindow::refreshPorts);
@@ -49,7 +47,6 @@ MainWindow::MainWindow(QWidget *parent)
     //************************************************************##############
 
     writeToNotes("Pointer Size: "+QString::number(sizeof(void *))+" If it is 8 : 64 bit else 4 means 32 bit");
-
 }
 
 MainWindow::~MainWindow()
@@ -315,6 +312,11 @@ void MainWindow::blinkLabel(QLabel *label,
     timer->start(durationMs);
 }
 
+QString MainWindow::getCurrentDateTime()
+{
+    return QDateTime::currentDateTime().toString("ddMMyyyy_hhmmsszzz");
+}
+
 
 void MainWindow::portStatus(const QString &data)
 {
@@ -332,8 +334,6 @@ void MainWindow::portStatus(const QString &data)
     {
         QMessageBox::critical(this,"Error",data);
     }
-
-    ui->textEdit_rawBytes->append(data);
 }
 
 void MainWindow::showGuiData(const QByteArray &byteArrayData)

@@ -55,3 +55,6 @@ Ver 2.5 ----------------------------------------------------
 
 Ver 2.6 ---------------------------------------------------
 - Updated blinkLabel() so that now it takes multiple clicks still show proper ui behaviour.
+
+Ver 2.7 --------------------------------------------------
+- Added getCurrentDateTime() and removed textEdit_rawBytes because anyhow we have debug_notes.

@@ -2,25 +2,31 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+
 #include <QSerialPort>
 #include <QSerialPortInfo>
 #include <serialporthandler.h>
+
 #include <QMessageBox>
 #include <QFile>
 #include <QDateTime>
+
 #include <QTimer>
-#include <windows.h>
-#include <psapi.h>
 #include <QElapsedTimer>
 #include <QEventLoop>
 #include <QApplication>
+
+#include <windows.h>
+#include <psapi.h>
+
 #include <QFuture>
 #include <QFutureWatcher>
 #include <QtConcurrent/QtConcurrent>
+
 #include <QLabel>
 #include <QScreen>
 #include <QInputDialog>
-
+#include <QVBoxLayout>
 
 
 
@@ -69,6 +75,8 @@ public:
                     int durationMs,
                     const QString &text);
 
+    static QString getCurrentDateTime();
+
 private slots:
     void onPortSelected(const QString &portName);
 
@@ -77,7 +85,6 @@ private slots:
     void showGuiData(const QByteArray &byteArrayData);
 
     //response time handling
-
     void handleTimeout();
 
     void onDataReceived();
