@@ -27,6 +27,7 @@
 #include <QScreen>
 #include <QInputDialog>
 #include <QVBoxLayout>
+#include <QScrollArea>
 
 
 
@@ -76,6 +77,8 @@ public:
                     const QString &text);
 
     static QString getCurrentDateTime();
+
+    void applyScrollArea();
 
 private slots:
     void onPortSelected(const QString &portName);

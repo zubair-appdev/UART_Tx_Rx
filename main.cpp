@@ -11,8 +11,6 @@ int main(int argc, char *argv[])
     //QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     //QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
 
-    QApplication a(argc, argv);
-
     QSettings settings("settings.ini", QSettings::IniFormat);
 
     int ppi = settings.value("Display/calibratedDPI", 0).toInt();
@@ -29,13 +27,18 @@ int main(int argc, char *argv[])
                  << "Diagonal:" << diagonal << "in"
                  << "DPI:" << ppi;
 
-        qputenv("QT_FONT_DPI", QByteArray::number(ppi));
+        double scaleFactor = ppi / 96.0;
+        qputenv("QT_SCALE_FACTOR",
+                QByteArray::number(scaleFactor));
+
         ppiFlag = true;
 
     } else {
         qDebug() << "Using system default DPI";
     }
 
+
+    QApplication a(argc, argv);
     MainWindow w;
 
     if(ppiFlag)
@@ -47,7 +50,6 @@ int main(int argc, char *argv[])
     {
         w.writeToNotes("Using system default DPI");
     }
-
 
     w.show();
     return a.exec();

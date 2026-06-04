@@ -58,3 +58,6 @@ Ver 2.6 ---------------------------------------------------
 
 Ver 2.7 --------------------------------------------------
 - Added getCurrentDateTime() and removed textEdit_rawBytes because anyhow we have debug_notes.
+
+Ver 2.8 --------------------------------------------------
+- Added applyScrollArea()  and fixed calibrate screen button.

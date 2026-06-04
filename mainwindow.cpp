@@ -47,6 +47,8 @@ MainWindow::MainWindow(QWidget *parent)
     //************************************************************##############
 
     writeToNotes("Pointer Size: "+QString::number(sizeof(void *))+" If it is 8 : 64 bit else 4 means 32 bit");
+
+    applyScrollArea();
 }
 
 MainWindow::~MainWindow()
@@ -315,6 +317,19 @@ void MainWindow::blinkLabel(QLabel *label,
 QString MainWindow::getCurrentDateTime()
 {
     return QDateTime::currentDateTime().toString("ddMMyyyy_hhmmsszzz");
+}
+
+void MainWindow::applyScrollArea()
+{
+    //In scroll area
+    // Only retrieve and embed the central widget in a scroll area
+    QWidget *existingCentralWidget = takeCentralWidget(); // Take the existing central widget
+    QScrollArea *scrollArea = new QScrollArea(this);
+    scrollArea->setWidget(existingCentralWidget);         // Embed it in the scroll area
+    scrollArea->setWidgetResizable(true);                 // Allow resizing within the scroll area
+
+    // Set the scroll area as the new central widget
+    setCentralWidget(scrollArea);
 }
 
 
