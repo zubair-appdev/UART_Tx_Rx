@@ -19,12 +19,35 @@ QStringList serialPortHandler::availablePorts()
     {
         ports<<info.portName();
     }
+
+    // Add Disconnect option at the bottom
+    ports << "Disconnect";
+
     return ports;
 }
 
 void serialPortHandler::setPORTNAME(const QString &portName)
 {
     buffer.clear();
+
+    // Handle Disconnect option
+    if(portName == "Disconnect")
+    {
+        if(serial->isOpen())
+        {
+            serial->close();
+            qDebug() << "Serial port disconnected";
+            emit portOpening("Serial port disconnected");
+        }
+        else
+        {
+            qDebug() << "No serial port was open";
+            emit portOpening("No serial port was open");
+        }
+
+        return; // Stop here
+    }
+
 
     if(serial->isOpen())
     {

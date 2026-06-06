@@ -349,6 +349,16 @@ void MainWindow::portStatus(const QString &data)
     {
         QMessageBox::critical(this,"Error",data);
     }
+
+    if(data.startsWith("Serial port disconnected"))
+    {
+        QMessageBox::critical(this,"Disconnected",data);
+    }
+
+    if(data.startsWith("No serial port was open"))
+    {
+        QMessageBox::critical(this,"No serial port",data);
+    }
 }
 
 void MainWindow::showGuiData(const QByteArray &byteArrayData)

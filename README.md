@@ -61,3 +61,6 @@ Ver 2.7 --------------------------------------------------
 
 Ver 2.8 --------------------------------------------------
 - Added applyScrollArea()  and fixed calibrate screen button.
+
+Ver 2.9 --------------------------------------------------
+- Added disconnect option in port selection.
